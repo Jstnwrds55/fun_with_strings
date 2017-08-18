@@ -13,7 +13,7 @@ def pigLatin(userSentence):
             pass
         if len(wordList[x]) == 1:
             wordList[x] += '-way'
-        elif wordList[x][0] in ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']:
+        elif wordList[x][0] in 'aeiouAEIOU':
             if lastLetter.isalpha():
                 wordList[x] += '-way'
             else:
