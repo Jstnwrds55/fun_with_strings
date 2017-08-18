@@ -5,12 +5,24 @@ inputSentence = input()
 def pigLatin(userSentence):
     wordList = userSentence.split()
     for x in range(0, len(wordList)):
-        if wordList[x] == 'a':
-            wordList[x] = 'a-way'
-        elif wordList[x][0] in ['a', 'e', 'i', 'o', 'u']:
+        lastLetter = wordList[x][len(wordList[x]) - 1]
+        try:
+            int(wordList[x][0])
+            continue
+        except:
+            pass
+        if len(wordList[x]) == 1:
             wordList[x] += '-way'
+        elif wordList[x][0] in ['a', 'e', 'i', 'o', 'u']:
+            if lastLetter.isalpha():
+                wordList[x] += '-way'
+            else:
+                wordList[x] = wordList[x][0:len(wordList[x]) - 1] + '-way' + lastLetter
         else:
-            wordList[x] = wordList[x][1:len(wordList[x])] + '-' + wordList[x][0] + 'ay'
+            if lastLetter.isalpha():
+                wordList[x] = wordList[x][1:len(wordList[x])] + '-' + wordList[x][0] + 'ay'
+            else:
+                wordList[x] = wordList[x][1:len(wordList[x]) - 1] + '-' + wordList[x][0] + 'ay' + lastLetter
     translatedSentence = ' '.join(wordList)
     print(translatedSentence)
     return translatedSentence
