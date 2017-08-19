@@ -4,8 +4,8 @@ from tkinter import messagebox
 
 root = Tk()
 root.withdraw()
-messagebox.showinfo("Word Count", "Choose the file you want to upload.")
-file_path = filedialog.askopenfilename()
+messagebox.showinfo("Word Count", "Choose the .txt file with words you want to count.")
+file_path = filedialog.askopenfilename(filetypes=[('Text files', '*.txt')])
 
 
 def wordCounter(text):
