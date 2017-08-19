@@ -7,8 +7,10 @@ def checkIfPalindrome(text):
     listText = list(textStripped)
     reverseText = list(reversed(textStripped))
     if listText == reverseText:
-        print(True)
+        print('Sure thing, that\'s a palindrome!')
+        return True
     else:
-        print(False)
+        print('Nope, that\'s not a palindrome')
+        return False
 
 checkIfPalindrome(userText)
