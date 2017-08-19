@@ -9,10 +9,36 @@ def saveAs():
     file1.write(t)
     file1.close()
 
-root = Tk('Text Editor')  # Initialize and name window
+
+def fontHelvetica():
+    global text
+    text.config(font="Helvetica")
+
+
+def fontCourier():
+    global text
+    text.config(font="Courier")
+
+# Window Creation Stuff
+root = Tk('Text Editor')  # Initialize window
+root.wm_title('Text Editor')  # Name window
 text = Text(root)  # Use root window as text box
 text.grid()  # Initialize grid of text box from root
-button = Button(root, text="save", command=saveAs)  # Create button from root that reads save and command is saveAs function
+
+# Button stuff
+button = Button(root, text="save", command=saveAs)  # Create button from root reads save and command is saveAs function
 button.grid()  # Display button
+
+# Font stuff
+font = Menubutton(root, text="Font")  # Adds a button that says Font
+font.grid()  # Displays the font button
+font.menu = Menu(font, tearoff=0)
+font["menu"] = font.menu
+helvetica = IntVar()
+courier = IntVar()
+font.menu.add_checkbutton(label="Courier", variable=courier,
+command=fontCourier)
+font.menu.add_checkbutton(label="Helvetica", variable=helvetica,
+command=fontHelvetica)
 
 root.mainloop()  # Keep window open
