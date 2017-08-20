@@ -8,9 +8,9 @@ messagebox.showinfo("Word Count", "Choose the .txt file with words you want to c
 file_path = filedialog.askopenfilename(filetypes=[('Text files', '*.txt')])
 
 
-def wordCounter(text):
-    wordList = text.split(' ')
-    print('The document you selected contained ' + str(len(wordList)) + ' words!')
-    return(len(wordList))
+def word_counter(text):
+    word_list = text.split(' ')
+    print('The document you selected contained ' + str(len(word_list)) + ' words!')
+    return(len(word_list))
 
-wordCounter(open(file_path).read())
+word_counter(open(file_path).read())
