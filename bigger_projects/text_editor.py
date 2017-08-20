@@ -3,6 +3,14 @@ from tkinter import filedialog
 from tkinter import messagebox
 
 
+def new_file():
+    if text.get("1.0", "end-1c") != '':
+        quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before creating a new one?')
+        if quit_answer == 'yes':
+            save_as()
+    text.delete(1.0, END)
+
+
 def open_file():
     if text.get("1.0", "end-1c") != '':
         quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before loading another one?')
@@ -22,7 +30,7 @@ def open_file():
     root.wm_title(filename)
 
 
-def save_as():
+def save_file():
     t = text.get("1.0", "end-1c")
     if root.wm_title() == 'Text Editor':
         save_location = filedialog.asksaveasfilename()
@@ -37,12 +45,13 @@ def save_as():
         file1.close()
 
 
-def new_file():
-    if text.get("1.0", "end-1c") != '':
-        quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before creating a new one?')
-        if quit_answer == 'yes':
-            save_as()
-    text.delete(1.0, END)
+def save_as():
+    t = text.get("1.0", "end-1c")
+    save_location = filedialog.asksaveasfilename()
+    file1 = open(save_location, "w+")
+    file1.write(t)
+    file1.close()
+    root.wm_title(save_location)
 
 
 def on_closing():
@@ -57,8 +66,17 @@ def on_closing():
         root.destroy()
 
 
+def about_me():
+    messagebox._show('Created by', 'Created by Justin Edwards in Python for fun.')
+
+
 def font_helvetica():
-    global text
+    selected_text_start = text.index("sel.first")
+    selected_text_end = text.index("sel.last")
+    try:
+        text.tag_add("Helvetica", selected_text_start, selected_text_end)
+    except:
+        pass
     text.config(font="Helvetica")
 
 
@@ -72,38 +90,35 @@ root.wm_title('Text Editor')  # Name window
 text = Text(root)  # Use root window as text box
 text.grid()  # Initialize grid of text box from root
 
-# Create frame for buttons to fit in
-button_frame = Frame(root)
-button_frame.grid(row=2, column=0, columnspan=2)
+# Text initialization stuff
+text.tag_configure("Helvetica", font="Helvetica")
 
-# Save button stuff
-save_button = Button(button_frame, text="Save File", command=save_as)  # Create save button with saveAs function as command
-save_button.grid(row=0, column=0)  # Display button
+# Initialize menus
+menu = Menu(root)
+root.config(menu=menu)
 
-# Load button stuff
-open_button = Button(button_frame, text="Open File", command=open_file)  # Creates open button with open_file function as command
-open_button.grid(row=0, column=1)
+# Create file menu
+file_menu = Menu(menu)
+menu.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="New File", command=new_file)
+file_menu.add_command(label="Open File", command=open_file)
+file_menu.add_command(label="Save File", command=save_file)
+file_menu.add_command(label="Save As", command=save_as)
 
-# New button stuff
-new_button = Button(button_frame, text="New File", command=new_file)
-new_button.grid(row=0, column=2)
+# Create font decoration menu
+font_menu = Menu(menu)
+font_family = Menu(menu)
+menu.add_cascade(label="Font", menu=font_menu)
+font_menu.add_cascade(label="Choose Font", menu=font_family)
+font_family.add_command(label="Helvetica", command=font_helvetica)
+font_family.add_command(label="Courier", command=font_courier)
+font_menu.add_command(label="Font Color")
 
-# Font stuff
-font = Menubutton(root, text="Font")  # Adds a button that says Font
-font.grid()  # Displays the font button
-font.menu = Menu(font, tearoff=0)
-font["menu"] = font.menu
-helvetica = IntVar()
-courier = IntVar()
-font.menu.add_checkbutton(label="Courier", variable=courier,
-command=font_courier)
-font.menu.add_checkbutton(label="Helvetica", variable=helvetica,
-command=font_helvetica)
+# Create help menu
+help_menu = Menu(menu)
+menu.add_cascade(label="Help", menu=help_menu)
+help_menu.add_command(label="About", command=about_me)
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
-
-root.lift()
-root.attributes('-topmost',True)
-
 
 root.mainloop()  # Keep window open
