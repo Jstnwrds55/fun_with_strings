@@ -84,6 +84,15 @@ def font_courier():
     global text
     text.config(font="Courier")
 
+
+def font_bold():
+    selected_text_start = text.index("sel.first")
+    selected_text_end = text.index("sel.last")
+    try:
+        text.tag_add("Bold", selected_text_start, selected_text_end)
+    except:
+        pass
+
 # Window Creation Stuff
 root = Tk()  # Initialize window
 root.wm_title('Text Editor')  # Name window
@@ -92,6 +101,7 @@ text.grid()  # Initialize grid of text box from root
 
 # Text initialization stuff
 text.tag_configure("Helvetica", font="Helvetica")
+text.tag_configure("Bold", font="bold")
 
 # Initialize menus
 menu = Menu(root)
@@ -108,11 +118,14 @@ file_menu.add_command(label="Save As", command=save_as)
 # Create font decoration menu
 font_menu = Menu(menu)
 font_family = Menu(menu)
+font_style = Menu(menu)
 menu.add_cascade(label="Font", menu=font_menu)
+
 font_menu.add_cascade(label="Choose Font", menu=font_family)
 font_family.add_command(label="Helvetica", command=font_helvetica)
 font_family.add_command(label="Courier", command=font_courier)
-font_menu.add_command(label="Font Color")
+font_menu.add_cascade(label="Font Weight", menu=font_style)
+font_style.add_cascade(label="Bold", command=font_bold)
 
 # Create help menu
 help_menu = Menu(menu)
