@@ -112,7 +112,7 @@ def font_style_changer(option_clicked):
 
 def color_chooser():
     user_color = askcolor()[1]
-    text.config("Color", foreground=user_color)
+    text.config(foreground=user_color)
 
 
 # If I ever try to change selection again
@@ -154,25 +154,28 @@ file_menu.add_command(label="Save As", command=save_as)
 font_menu = Menu(menu)
 menu.add_cascade(label="Font", menu=font_menu)
 
+# Font family dropdown
 font_family = Menu(menu)
 font_menu.add_cascade(label="Choose Font", menu=font_family)
-fontVar = IntVar(root)
-fontVar.set(1)
-font_family.add_checkbutton(label="Helvetica", variable=fontVar, command=lambda: font_changer('Helvetica'))
-font_family.add_checkbutton(label="Courier", command=lambda: font_changer('Courier'))
+font_family.add_radiobutton(label="Helvetica", value=1, command=lambda: font_changer('Helvetica'))
+font_family.add_radiobutton(label="Courier", command=lambda: font_changer('Courier'))
 
+# Font style dropdown
 font_style = Menu(menu)
 font_menu.add_cascade(label="Font Weight", menu=font_style)
 font_style.add_checkbutton(label="Bold", command=lambda: font_style_changer('bold'))
 font_style.add_checkbutton(label="Italic", command=lambda: font_style_changer('italic'))
 
+# Font size dropdown
 font_size = Menu(menu)
 sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
 var = tk.IntVar()
 var.set(12)
 font_size_options = OptionMenu(root, var, *sizes_list)
 font_size_options.pack()
-font_menu.add_cascade(label="Font Size", command=font_size_options.pack())
+font_menu.add_cascade(label="Font Size", command=font_size_options)
+
+# Color chooser
 font_color = Menu(menu)
 font_menu.add_command(label="Font Color", command=color_chooser)
 
