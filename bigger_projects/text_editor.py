@@ -128,7 +128,7 @@ text = Text(root)  # Use root window as text box
 text.grid()  # Initialize grid of text box from root
 text.config(font=('Helvetica', 14))
 
-#Font info
+# Font info
 current_font = 'Helvetica'
 current_font_size = 14
 is_bold = False
@@ -156,7 +156,9 @@ menu.add_cascade(label="Font", menu=font_menu)
 
 font_family = Menu(menu)
 font_menu.add_cascade(label="Choose Font", menu=font_family)
-font_family.add_checkbutton(label="Helvetica", command=lambda: font_changer('Helvetica'))
+fontVar = IntVar(root)
+fontVar.set(1)
+font_family.add_checkbutton(label="Helvetica", variable=fontVar, command=lambda: font_changer('Helvetica'))
 font_family.add_checkbutton(label="Courier", command=lambda: font_changer('Courier'))
 
 font_style = Menu(menu)
