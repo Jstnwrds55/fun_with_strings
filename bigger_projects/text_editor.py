@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
+import tkinter as tk
+from tkinter.colorchooser import askcolor
 
 
 def new_file():
@@ -70,38 +72,71 @@ def about_me():
     messagebox._show('Created by', 'Created by Justin Edwards in Python for fun.')
 
 
-def font_helvetica():
-    selected_text_start = text.index("sel.first")
-    selected_text_end = text.index("sel.last")
-    try:
-        text.tag_add("Helvetica", selected_text_start, selected_text_end)
-    except:
-        pass
-    text.config(font="Helvetica")
+def font_changer(font_choice):
+    text.config(font=(font_choice, 14, style_combo))
+    global current_font
+    current_font = font_choice
 
 
-def font_courier():
-    global text
-    text.config(font="Courier")
+def font_size_changer(size):
+    text.config(font=(current_font, size, style_combo))
+    global current_font_size
+    current_font_size = size
 
 
-def font_bold():
-    selected_text_start = text.index("sel.first")
-    selected_text_end = text.index("sel.last")
-    try:
-        text.tag_add("Bold", selected_text_start, selected_text_end)
-    except:
-        pass
+def font_style_changer(option_clicked):
+    global is_bold
+    global is_italic
+    global style_combo
+    if option_clicked == 'bold':
+        if not is_bold:
+            is_bold = True
+        else:
+            is_bold = False
+    elif option_clicked == 'italic':
+        if not is_italic:
+            is_italic = True
+        else:
+            is_italic = False
+    if is_bold and is_italic:
+        style_combo = 'bold italic'
+    elif is_bold:
+        style_combo = 'bold'
+    elif is_italic:
+        style_combo = 'italic'
+    else:
+        style_combo = ''
+
+    text.config(font=(current_font, 14, style_combo))
+
+
+def color_chooser():
+    user_color = askcolor()[1]
+    text.config("Color", foreground=user_color)
+
+
+# If I ever try to change selection again
+# selected_text_start = text.index("sel.first")
+# selected_text_end = text.index("sel.last")
+# text.tag_add("Color", selected_text_start, selected_text_end)
+# text.tag_configure("Helvetica", font="Helvetica")
 
 # Window Creation Stuff
 root = Tk()  # Initialize window
 root.wm_title('Text Editor')  # Name window
 text = Text(root)  # Use root window as text box
 text.grid()  # Initialize grid of text box from root
+text.config(font=('Helvetica', 14))
 
-# Text initialization stuff
-text.tag_configure("Helvetica", font="Helvetica")
-text.tag_configure("Bold", font="bold")
+#Font info
+current_font = 'Helvetica'
+current_font_size = 14
+is_bold = False
+is_italic = False
+style_combo = ''
+
+root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
+text.pack(expand=True, fill='both')  # Text box resizes with window
 
 # Initialize menus
 menu = Menu(root)
@@ -117,15 +152,27 @@ file_menu.add_command(label="Save As", command=save_as)
 
 # Create font decoration menu
 font_menu = Menu(menu)
-font_family = Menu(menu)
-font_style = Menu(menu)
 menu.add_cascade(label="Font", menu=font_menu)
 
+font_family = Menu(menu)
 font_menu.add_cascade(label="Choose Font", menu=font_family)
-font_family.add_command(label="Helvetica", command=font_helvetica)
-font_family.add_command(label="Courier", command=font_courier)
+font_family.add_checkbutton(label="Helvetica", command=lambda: font_changer('Helvetica'))
+font_family.add_checkbutton(label="Courier", command=lambda: font_changer('Courier'))
+
+font_style = Menu(menu)
 font_menu.add_cascade(label="Font Weight", menu=font_style)
-font_style.add_cascade(label="Bold", command=font_bold)
+font_style.add_checkbutton(label="Bold", command=lambda: font_style_changer('bold'))
+font_style.add_checkbutton(label="Italic", command=lambda: font_style_changer('italic'))
+
+font_size = Menu(menu)
+sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+var = tk.IntVar()
+var.set(12)
+font_size_options = OptionMenu(root, var, *sizes_list)
+font_size_options.pack()
+font_menu.add_cascade(label="Font Size", command=font_size_options.pack())
+font_color = Menu(menu)
+font_menu.add_command(label="Font Color", command=color_chooser)
 
 # Create help menu
 help_menu = Menu(menu)
@@ -133,5 +180,6 @@ menu.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="About", command=about_me)
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
+
 
 root.mainloop()  # Keep window open
