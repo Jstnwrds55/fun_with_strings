@@ -24,19 +24,38 @@ def open_file():
 
 def save_as():
     t = text.get("1.0", "end-1c")
-    saveLocation = filedialog.asksaveasfilename()
-    file1 = open(saveLocation, "w+")
-    file1.write(t)
-    file1.close()
-    root.wm_title(saveLocation)
+    if root.wm_title() == 'Text Editor':
+        save_location = filedialog.asksaveasfilename()
+        file1 = open(save_location, "w+")
+        file1.write(t)
+        file1.close()
+        root.wm_title(save_location)
+    else:
+        save_location = root.wm_title()
+        file1 = open(save_location, "w+")
+        file1.write(t)
+        file1.close()
 
 
 def new_file():
-    if text.get("1.0", "end-1c"):
+    if text.get("1.0", "end-1c") != '':
         quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before creating a new one?')
         if quit_answer == 'yes':
             save_as()
     text.delete(1.0, END)
+
+
+def on_closing():
+    if text.get("1.0", "end-1c") != '':
+        quit_answer = messagebox.askyesnocancel('Save?', 'Do you want to save this document before exiting?')
+        print(quit_answer)
+        if quit_answer == True:
+            save_as()
+            root.destroy()
+        elif quit_answer == False:
+            root.destroy()
+    else:
+        root.destroy()
 
 
 def font_helvetica():
@@ -81,5 +100,7 @@ font.menu.add_checkbutton(label="Courier", variable=courier,
 command=font_courier)
 font.menu.add_checkbutton(label="Helvetica", variable=helvetica,
 command=font_helvetica)
+
+root.protocol("WM_DELETE_WINDOW", on_closing)
 
 root.mainloop()  # Keep window open
