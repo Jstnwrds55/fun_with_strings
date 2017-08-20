@@ -48,11 +48,10 @@ def new_file():
 def on_closing():
     if text.get("1.0", "end-1c") != '':
         quit_answer = messagebox.askyesnocancel('Save?', 'Do you want to save this document before exiting?')
-        print(quit_answer)
-        if quit_answer == True:
+        if quit_answer:
             save_as()
             root.destroy()
-        elif quit_answer == False:
+        elif not quit_answer:
             root.destroy()
     else:
         root.destroy()
@@ -102,5 +101,9 @@ font.menu.add_checkbutton(label="Helvetica", variable=helvetica,
 command=font_helvetica)
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
+
+root.lift()
+root.attributes('-topmost',True)
+
 
 root.mainloop()  # Keep window open
