@@ -1,12 +1,25 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import messagebox
 
 
 def open_file():
+    if text.get("1.0", "end-1c") != '':
+        quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before loading another one?')
+        if quit_answer == 'yes':
+            save_as()
+    filename = filedialog.askopenfilename(filetypes=[
+        ('Python code files', '*.py'),
+        ('Perl code files', '*.pl;*.pm'),  # semicolon trick
+        ('Java code files', '*.java'),
+        ('C++ code files', '*.cpp;*.h'),   # semicolon trick
+        ('Text files', '*.txt'),
+        ('All files', '*'), ])
+    file1 = open(filename)
     text.delete(1.0, END)
-    file1 = filedialog.askopenfile(filetypes=[('Text files', '*.txt')])
     contents = file1.read()
-    text.insert('1.0', contents)
+    text.insert(1.0, contents)
+    root.wm_title(filename)
 
 
 def save_as():
@@ -15,9 +28,14 @@ def save_as():
     file1 = open(saveLocation, "w+")
     file1.write(t)
     file1.close()
+    root.wm_title(saveLocation)
 
 
 def new_file():
+    if text.get("1.0", "end-1c"):
+        quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before creating a new one?')
+        if quit_answer == 'yes':
+            save_as()
     text.delete(1.0, END)
 
 
@@ -45,7 +63,7 @@ save_button = Button(button_frame, text="Save File", command=save_as)  # Create 
 save_button.grid(row=0, column=0)  # Display button
 
 # Load button stuff
-open_button = Button(button_frame, text="Load File", command=open_file)  # Creates open button with open_file function as command
+open_button = Button(button_frame, text="Open File", command=open_file)  # Creates open button with open_file function as command
 open_button.grid(row=0, column=1)
 
 # New button stuff
