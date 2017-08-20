@@ -2,6 +2,13 @@ from tkinter import *
 from tkinter import filedialog
 
 
+def openFile():
+    text.delete(1.0, END)
+    file1 = filedialog.askopenfile(filetypes=[('Text files', '*.txt')])
+    contents = file1.read()
+    text.insert('1.0', contents)
+
+
 def saveAs():
     t = text.get("1.0", "end-1c")
     saveLocation = filedialog.asksaveasfilename()
@@ -25,9 +32,13 @@ root.wm_title('Text Editor')  # Name window
 text = Text(root)  # Use root window as text box
 text.grid()  # Initialize grid of text box from root
 
-# Button stuff
-button = Button(root, text="save", command=saveAs)  # Create button from root reads save and command is saveAs function
-button.grid()  # Display button
+# Save button stuff
+saveButton = Button(root, text="Save", command=saveAs)  # Create save button with saveAs function as command
+saveButton.grid()  # Display button
+
+# Load button stuff
+openButton = Button(root, text="Load", command=openFile)  # Creates open button with openFile function as command
+openButton.grid()
 
 # Font stuff
 font = Menubutton(root, text="Font")  # Adds a button that says Font
