@@ -73,20 +73,21 @@ def about_me():
 
 
 def font_changer(font_choice):
-    text.config(font=(font_choice, 14, style_combo))
+    text.config(font=(font_choice, current_font_size, style_combo))
     global current_font
     current_font = font_choice
 
 
-def font_size_changer(size):
-    text.config(font=(current_font, size, style_combo))
+def font_size_changer(*args):
     global current_font_size
-    current_font_size = size
+    current_font_size = var.get()
+    text.config(font=(current_font, current_font_size, style_combo))
 
 
 def font_style_changer(option_clicked):
     global is_bold
     global is_italic
+    global is_underline
     global style_combo
     if option_clicked == 'bold':
         if not is_bold:
@@ -98,16 +99,29 @@ def font_style_changer(option_clicked):
             is_italic = True
         else:
             is_italic = False
-    if is_bold and is_italic:
+    elif option_clicked == 'underline':
+        if not is_underline:
+            is_underline = True
+        else:
+            is_underline = False
+    if is_bold and is_italic and is_underline:
+        style_combo = 'bold italic underline'
+    elif is_bold and is_italic:
         style_combo = 'bold italic'
-    elif is_bold:
-        style_combo = 'bold'
+    elif is_bold and is_underline:
+        style_combo = 'bold underline'
+    elif is_italic and is_underline:
+        style_combo = 'italic underline'
     elif is_italic:
         style_combo = 'italic'
+    elif is_bold:
+        style_combo = 'bold'
+    elif is_underline:
+        style_combo = 'underline'
     else:
         style_combo = ''
 
-    text.config(font=(current_font, 14, style_combo))
+    text.config(font=(current_font, current_font_size, style_combo))
 
 
 def color_chooser():
@@ -124,19 +138,23 @@ def color_chooser():
 # Window Creation Stuff
 root = Tk()  # Initialize window
 root.wm_title('Text Editor')  # Name window
+root.wm_geometry('700x400')
 text = Text(root)  # Use root window as text box
-text.grid()  # Initialize grid of text box from root
+text.grid(row=0, column=0, sticky='nsew')  # Initialize grid of text box from root
+root.grid_rowconfigure(0, weight=1)
+root.grid_columnconfigure(0, weight=1)
 text.config(font=('Helvetica', 14))
 
 # Font info
+current_font_size = 12
 current_font = 'Helvetica'
-current_font_size = 14
 is_bold = False
 is_italic = False
+is_underline = False
 style_combo = ''
 
-root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
-text.pack(expand=True, fill='both')  # Text box resizes with window
+# root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
+# text.grid()  # Text box resizes with window
 
 # Initialize menus
 menu = Menu(root)
@@ -165,15 +183,16 @@ font_style = Menu(menu)
 font_menu.add_cascade(label="Font Weight", menu=font_style)
 font_style.add_checkbutton(label="Bold", command=lambda: font_style_changer('bold'))
 font_style.add_checkbutton(label="Italic", command=lambda: font_style_changer('italic'))
+font_style.add_checkbutton(label="Underline", command=lambda: font_style_changer('underline'))
 
 # Font size dropdown
 font_size = Menu(menu)
 sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
 var = tk.IntVar()
+var.trace_variable('w', font_size_changer)
 var.set(12)
 font_size_options = OptionMenu(root, var, *sizes_list)
-font_size_options.pack()
-font_menu.add_cascade(label="Font Size", command=font_size_options)
+font_size_options.grid(row=1)
 
 # Color chooser
 font_color = Menu(menu)
