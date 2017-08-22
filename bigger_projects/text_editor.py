@@ -22,7 +22,7 @@ def open_file():
         ('Python code files', '*.py'),
         ('Perl code files', '*.pl;*.pm'),  # semicolon trick
         ('Java code files', '*.java'),
-        ('C++ code files', '*.cpp;*.h'),   # semicolon trick
+        ('C++ code files', '*.cpp;*.h'),  # semicolon trick
         ('Text files', '*.txt'),
         ('All files', '*'), ])
     file1 = open(filename)
@@ -84,43 +84,9 @@ def font_size_changer(*args):
     text.config(font=(current_font, current_font_size, style_combo))
 
 
-def font_style_changer(option_clicked):
-    global is_bold
-    global is_italic
-    global is_underline
+def font_style_changer():
     global style_combo
-    if option_clicked == 'bold':
-        if not is_bold:
-            is_bold = True
-        else:
-            is_bold = False
-    elif option_clicked == 'italic':
-        if not is_italic:
-            is_italic = True
-        else:
-            is_italic = False
-    elif option_clicked == 'underline':
-        if not is_underline:
-            is_underline = True
-        else:
-            is_underline = False
-    if is_bold and is_italic and is_underline:
-        style_combo = 'bold italic underline'
-    elif is_bold and is_italic:
-        style_combo = 'bold italic'
-    elif is_bold and is_underline:
-        style_combo = 'bold underline'
-    elif is_italic and is_underline:
-        style_combo = 'italic underline'
-    elif is_italic:
-        style_combo = 'italic'
-    elif is_bold:
-        style_combo = 'bold'
-    elif is_underline:
-        style_combo = 'underline'
-    else:
-        style_combo = ''
-
+    style_combo = (is_bold.get() + ' ' + is_italic.get() + ' ' + is_underline.get())
     text.config(font=(current_font, current_font_size, style_combo))
 
 
@@ -148,10 +114,7 @@ text.config(font=('Helvetica', 14))
 # Font info
 current_font_size = 12
 current_font = 'Helvetica'
-is_bold = False
-is_italic = False
-is_underline = False
-style_combo = ''
+style_combo = []
 
 # root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
 # text.grid()  # Text box resizes with window
@@ -181,9 +144,14 @@ font_family.add_radiobutton(label="Courier", command=lambda: font_changer('Couri
 # Font style dropdown
 font_style = Menu(menu)
 font_menu.add_cascade(label="Font Weight", menu=font_style)
-font_style.add_checkbutton(label="Bold", command=lambda: font_style_changer('bold'))
-font_style.add_checkbutton(label="Italic", command=lambda: font_style_changer('italic'))
-font_style.add_checkbutton(label="Underline", command=lambda: font_style_changer('underline'))
+is_bold = tk.StringVar()
+font_style.add_checkbutton(label="Bold", variable=is_bold, onvalue='bold', offvalue='', command=font_style_changer)
+is_italic = tk.StringVar()
+font_style.add_checkbutton(label="Italic", variable=is_italic, onvalue='italic', offvalue='',
+                           command=font_style_changer)
+is_underline = tk.StringVar()
+font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='underline', offvalue='',
+                           command=font_style_changer)
 
 # Font size dropdown
 font_size = Menu(menu)
@@ -204,6 +172,5 @@ menu.add_cascade(label="Help", menu=help_menu)
 help_menu.add_command(label="About", command=about_me)
 
 root.protocol("WM_DELETE_WINDOW", on_closing)
-
 
 root.mainloop()  # Keep window open
