@@ -78,9 +78,9 @@ def font_changer(font_choice):
     current_font = font_choice
 
 
-def font_size_changer(*args):
+def font_size_changer(clicked_size):
     global current_font_size
-    current_font_size = var.get()
+    current_font_size = clicked_size
     text.config(font=(current_font, current_font_size, style_combo))
 
 
@@ -154,13 +154,11 @@ font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='un
                            command=font_style_changer)
 
 # Font size dropdown
-font_size = Menu(menu)
 sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-var = tk.IntVar()
-var.trace_variable('w', font_size_changer)
-var.set(12)
-font_size_options = OptionMenu(root, var, *sizes_list)
-font_size_options.grid(row=1)
+font_size = Menu(menu)
+font_menu.add_cascade(label="Font Size", menu=font_size)
+for x in range(0, len(sizes_list)):
+    font_size.add_command(label=str(sizes_list[x]), command=lambda: font_size_changer(sizes_list[x]))
 
 # Color chooser
 font_color = Menu(menu)
