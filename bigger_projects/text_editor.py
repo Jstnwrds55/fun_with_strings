@@ -62,6 +62,8 @@ def on_closing():
         if quit_answer:
             save_as()
             root.destroy()
+        elif quit_answer == None:
+            pass
         elif not quit_answer:
             root.destroy()
     else:
