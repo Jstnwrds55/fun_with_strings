@@ -62,7 +62,7 @@ def on_closing():
         if quit_answer:
             save_as()
             root.destroy()
-        elif quit_answer == None:
+        elif quit_answer is None:
             pass
         elif not quit_answer:
             root.destroy()
@@ -103,74 +103,80 @@ def color_chooser():
 # text.tag_add("Color", selected_text_start, selected_text_end)
 # text.tag_configure("Helvetica", font="Helvetica")
 
-# Window Creation Stuff
-root = Tk()  # Initialize window
-root.wm_title('Text Editor')  # Name window
-root.wm_geometry('700x400')
-text = Text(root)  # Use root window as text box
-text.grid(row=0, column=0, sticky='nsew')  # Initialize grid of text box from root
-root.grid_rowconfigure(0, weight=1)
-root.grid_columnconfigure(0, weight=1)
-text.config(font=('Helvetica', 14))
+class MainApplication(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
 
-# Font info
-current_font_size = 12
-current_font = 'Helvetica'
-style_combo = []
+if __name__ == "__main__":
+    # Window Creation Stuff
+    root = Tk()  # Initialize window
+    root.wm_title('Text Editor')  # Name window
+    root.wm_geometry('700x400')
+    text = Text(root)  # Use root window as text box
+    text.grid(row=0, column=0, sticky='nsew')  # Initialize grid of text box from root
+    root.grid_rowconfigure(0, weight=1)
+    root.grid_columnconfigure(0, weight=1)
+    text.config(font=('Helvetica', 14))
 
-# root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
-# text.grid()  # Text box resizes with window
+    # Font info
+    current_font_size = 12
+    current_font = 'Helvetica'
+    style_combo = []
 
-# Initialize menus
-menu = Menu(root)
-root.config(menu=menu)
+    # root.grid_columnconfigure(0, weight=1)  # Make window stay the same when font changes
+    # text.grid()  # Text box resizes with window
 
-# Create file menu
-file_menu = Menu(menu)
-menu.add_cascade(label="File", menu=file_menu)
-file_menu.add_command(label="New File", command=new_file)
-file_menu.add_command(label="Open File", command=open_file)
-file_menu.add_command(label="Save File", command=save_file)
-file_menu.add_command(label="Save As", command=save_as)
+    # Initialize menus
+    menu = Menu(root)
+    root.config(menu=menu)
 
-# Create font decoration menu
-font_menu = Menu(menu)
-menu.add_cascade(label="Font", menu=font_menu)
+    # Create file menu
+    file_menu = Menu(menu)
+    menu.add_cascade(label="File", menu=file_menu)
+    file_menu.add_command(label="New File", command=new_file)
+    file_menu.add_command(label="Open File", command=open_file)
+    file_menu.add_command(label="Save File", command=save_file)
+    file_menu.add_command(label="Save As", command=save_as)
 
-# Font family dropdown
-font_family = Menu(menu)
-font_menu.add_cascade(label="Choose Font", menu=font_family)
-font_family.add_radiobutton(label="Helvetica", value=1, command=lambda: font_changer('Helvetica'))
-font_family.add_radiobutton(label="Courier", command=lambda: font_changer('Courier'))
+    # Create font decoration menu
+    font_menu = Menu(menu)
+    menu.add_cascade(label="Font", menu=font_menu)
 
-# Font style dropdown
-font_style = Menu(menu)
-font_menu.add_cascade(label="Font Weight", menu=font_style)
-is_bold = tk.StringVar()
-font_style.add_checkbutton(label="Bold", variable=is_bold, onvalue='bold', offvalue='', command=font_style_changer)
-is_italic = tk.StringVar()
-font_style.add_checkbutton(label="Italic", variable=is_italic, onvalue='italic', offvalue='',
-                           command=font_style_changer)
-is_underline = tk.StringVar()
-font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='underline', offvalue='',
-                           command=font_style_changer)
+    # Font family dropdown
+    font_family = Menu(menu)
+    font_menu.add_cascade(label="Choose Font", menu=font_family)
+    font_family.add_radiobutton(label="Helvetica", value=1, command=lambda: font_changer('Helvetica'))
+    font_family.add_radiobutton(label="Courier", command=lambda: font_changer('Courier'))
 
-# Font size dropdown
-sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
-font_size = Menu(menu)
-font_menu.add_cascade(label="Font Size", menu=font_size)
-for x in range(0, len(sizes_list)):
-    font_size.add_command(label=str(sizes_list[x]), command=lambda: font_size_changer(sizes_list[x]))
+    # Font style dropdown
+    font_style = Menu(menu)
+    font_menu.add_cascade(label="Font Weight", menu=font_style)
+    is_bold = tk.StringVar()
+    font_style.add_checkbutton(label="Bold", variable=is_bold, onvalue='bold', offvalue='', command=font_style_changer)
+    is_italic = tk.StringVar()
+    font_style.add_checkbutton(label="Italic", variable=is_italic, onvalue='italic', offvalue='',
+                               command=font_style_changer)
+    is_underline = tk.StringVar()
+    font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='underline', offvalue='',
+                               command=font_style_changer)
 
-# Color chooser
-font_color = Menu(menu)
-font_menu.add_command(label="Font Color", command=color_chooser)
+    # Font size dropdown
+    sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
+    font_size = Menu(menu)
+    font_menu.add_cascade(label="Font Size", menu=font_size)
+    for x in range(0, len(sizes_list)):
+        font_size.add_command(label=str(sizes_list[x]), command=lambda: font_size_changer(sizes_list[x]))
 
-# Create help menu
-help_menu = Menu(menu)
-menu.add_cascade(label="Help", menu=help_menu)
-help_menu.add_command(label="About", command=about_me)
+    # Color chooser
+    font_color = Menu(menu)
+    font_menu.add_command(label="Font Color", command=color_chooser)
 
-root.protocol("WM_DELETE_WINDOW", on_closing)
+    # Create help menu
+    help_menu = Menu(menu)
+    menu.add_cascade(label="Help", menu=help_menu)
+    help_menu.add_command(label="About", command=about_me)
 
-root.mainloop()  # Keep window open
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+
+    root.mainloop()  # Keep window open
