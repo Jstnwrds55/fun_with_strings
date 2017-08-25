@@ -162,11 +162,18 @@ if __name__ == "__main__":
                                command=font_style_changer)
 
     # Font size dropdown
-    sizes_list = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30]
     font_size = Menu(menu)
     font_menu.add_cascade(label="Font Size", menu=font_size)
-    for x in range(0, len(sizes_list)):
-        font_size.add_command(label=str(sizes_list[x]), command=lambda: font_size_changer(sizes_list[x]))
+    font_size.add_command(label=str(8), command=lambda: font_size_changer(8))
+    font_size.add_command(label=str(12), command=lambda: font_size_changer(12))
+    font_size.add_command(label=str(16), command=lambda: font_size_changer(16))
+    font_size.add_command(label=str(20), command=lambda: font_size_changer(20))
+    font_size.add_command(label=str(24), command=lambda: font_size_changer(24))
+    font_size.add_command(label=str(28), command=lambda: font_size_changer(28))
+    font_size.add_command(label=str(32), command=lambda: font_size_changer(32))
+    font_size.add_command(label=str(36), command=lambda: font_size_changer(36))
+    font_size.add_command(label=str(40), command=lambda: font_size_changer(40))
+    font_size.add_command(label=str(44), command=lambda: font_size_changer(44))
 
     # Color chooser
     font_color = Menu(menu)
