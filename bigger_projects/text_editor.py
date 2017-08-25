@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter.colorchooser import askcolor
 
 
-def new_file():
+def new_file(*args):
     if text.get("1.0", "end-1c") != '':
         quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before creating a new one?')
         if quit_answer == 'yes':
@@ -13,7 +13,7 @@ def new_file():
     text.delete(1.0, END)
 
 
-def open_file():
+def open_file(*args):
     if text.get("1.0", "end-1c") != '':
         quit_answer = messagebox.askquestion('Save?', 'Do you want to save this document before loading another one?')
         if quit_answer == 'yes':
@@ -32,7 +32,7 @@ def open_file():
     root.wm_title(filename)
 
 
-def save_file():
+def save_file(*args):
     t = text.get("1.0", "end-1c")
     if root.wm_title() == 'Text Editor':
         save_location = filedialog.asksaveasfilename()
@@ -47,7 +47,7 @@ def save_file():
         file1.close()
 
 
-def save_as():
+def save_as(*args):
     t = text.get("1.0", "end-1c")
     save_location = filedialog.asksaveasfilename()
     file1 = open(save_location, "w+")
@@ -86,7 +86,7 @@ def font_size_changer(clicked_size):
     text.config(font=(current_font, current_font_size, style_combo))
 
 
-def font_style_changer():
+def font_style_changer(*args):
     global style_combo
     style_combo = (is_bold.get() + ' ' + is_italic.get() + ' ' + is_underline.get())
     text.config(font=(current_font, current_font_size, style_combo))
@@ -134,10 +134,14 @@ if __name__ == "__main__":
     # Create file menu
     file_menu = Menu(menu)
     menu.add_cascade(label="File", menu=file_menu)
-    file_menu.add_command(label="New File", command=new_file)
-    file_menu.add_command(label="Open File", command=open_file)
-    file_menu.add_command(label="Save File", command=save_file)
-    file_menu.add_command(label="Save As", command=save_as)
+    file_menu.add_command(label="New File", command=new_file, accelerator="Command+N")
+    file_menu.add_command(label="Open File", command=open_file, accelerator="Command+O")
+    file_menu.add_command(label="Save File", command=save_file, accelerator="Command+S")
+    file_menu.add_command(label="Save As", command=save_as, accelerator="Command+Shift+S")
+    root.bind('<Command-n>', new_file)
+    root.bind('<Command-o>', open_file)
+    root.bind('<Command-s>', save_file)
+    root.bind('<Command-Shift-s>', save_as)
 
     # Create font decoration menu
     font_menu = Menu(menu)
@@ -153,13 +157,18 @@ if __name__ == "__main__":
     font_style = Menu(menu)
     font_menu.add_cascade(label="Font Weight", menu=font_style)
     is_bold = tk.StringVar()
-    font_style.add_checkbutton(label="Bold", variable=is_bold, onvalue='bold', offvalue='', command=font_style_changer)
+    font_style.add_checkbutton(label="Bold", variable=is_bold, onvalue='bold', offvalue='', command=font_style_changer,
+                               accelerator="Command+B")
     is_italic = tk.StringVar()
     font_style.add_checkbutton(label="Italic", variable=is_italic, onvalue='italic', offvalue='',
-                               command=font_style_changer)
+                               command=font_style_changer, accelerator="Command+I")
     is_underline = tk.StringVar()
     font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='underline', offvalue='',
-                               command=font_style_changer)
+                               command=font_style_changer, accelerator='Command+U')
+
+    root.bind('<Command-b>', font_style_changer)
+    root.bind('<Command-i>', font_style_changer)
+    root.bind('<Command-u>', font_style_changer)
 
     # Font size dropdown
     font_size = Menu(menu)
