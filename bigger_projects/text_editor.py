@@ -166,7 +166,7 @@ if __name__ == "__main__":
     font_style.add_checkbutton(label="Underline", variable=is_underline, onvalue='underline', offvalue='',
                                command=font_style_changer, accelerator='Command+U')
 
-    root.bind('<Command-b>', font_style_changer)
+    root.bind('<Command-B>', font_style_changer)
     root.bind('<Command-i>', font_style_changer)
     root.bind('<Command-u>', font_style_changer)
 
